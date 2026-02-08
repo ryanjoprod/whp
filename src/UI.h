@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "Rectangle.h"
+#include "Button.h"
 
 class UI {
 public:
@@ -31,6 +32,7 @@ public:
 		*/
 		a.render(surface);
 		b.render(surface);
+		c.render(surface);
 	}
 
 	void handleEvent(SDL_Event& e) {
@@ -41,10 +43,17 @@ public:
 		*/
 		a.handleEvent(e);
 		b.handleEvent(e);
+		c.handleEvent(e);
+	}
+
+	void setRectangleColors(const SDL_Color& color) {
+		a.setColor(color);
+		b.setColor(color);
 	}
 
 private:
 	// std::vector<std::unique_ptr<Rectangle>> rectangles;
 	Rectangle a{ SDL_Rect{50, 50, 50, 50} };
 	Rectangle b{ SDL_Rect{150, 50, 50, 50} };
+	Button c{*this, SDL_Rect{250, 50, 50, 50}, a };
 };
