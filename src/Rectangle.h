@@ -8,8 +8,11 @@ public:
 	: rect{ rect }
 	{}
 
+	// virtual ~Rectangle() = default;
+
+	// virtual void render(SDL_Surface* surface) const {
 	void render(SDL_Surface* surface) const {
-		auto [r, g, b, a] {isPointerHovering ? (isClicked ? clickedColor : hoverColor) : color};
+		auto [r, g, b, a] {isPointerHovering ? hoverColor : color};
 		const auto* fmt = SDL_GetPixelFormatDetails(surface->format);
 
 		SDL_FillSurfaceRect(
@@ -19,7 +22,8 @@ public:
 		);
 	}
 
-	void handleEvent(SDL_Event &e) {
+	// virtual void handleEvent(SDL_Event &e) {
+	void handleEvent(SDL_Event& e) {
 		if (e.type == SDL_EVENT_MOUSE_MOTION) {
 			isPointerHovering = isWithinRect(
 				(int)e.motion.x, (int)e.motion.y
@@ -27,17 +31,6 @@ public:
 		}
 		else if (e.type == SDL_EVENT_WINDOW_MOUSE_LEAVE) {
 			isPointerHovering = false;
-			isClicked = false;
-		}
-		else if (e.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
-			if (isPointerHovering &&
-				e.button.button == SDL_BUTTON_LEFT
-			) {
-				isClicked = true;
-			}
-		}
-		else if (e.type == SDL_EVENT_MOUSE_BUTTON_UP) {
-			if (isPointerHovering) isClicked = false;
 		}
 	}
 
@@ -49,10 +42,6 @@ public:
 		hoverColor = newColor;
 	}
 
-	void setClickedColor(const SDL_Color& newColor) {
-		clickedColor = newColor;
-	}
-
 	SDL_Color getColor() const {
 		return color;
 	}
@@ -61,18 +50,12 @@ public:
 		return hoverColor;
 	}
 
-	SDL_Color getClickedColor() const {
-		return clickedColor;
-	}
-
 private:
 	SDL_Rect rect;
 	SDL_Color color{ 255, 0, 0, 255 };
 	SDL_Color hoverColor{ 0, 0, 255, 255 };
-	SDL_Color clickedColor{ 0, 255, 0, 255 };
 
 	bool isPointerHovering{ false };
-	bool isClicked{ false };
 	bool isWithinRect(int x, int y) {
 		if (x < rect.x) return false;
 		if (x > rect.x + rect.w) return false;
