@@ -17,6 +17,8 @@ int main(int, char**) {
 				isRunning = false;
 			}
 		}
+
+		window.render();
 	}
 
 	SDL_Quit();
