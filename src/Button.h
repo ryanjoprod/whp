@@ -2,29 +2,31 @@
 
 #include <SDL3/SDL.h>
 
-#include <iostream>
+#include <string>
 
 #include "Rectangle.h"
-
-class UI;
+#include "UserEvents.h"
 
 class Button : public Rectangle {
 public:
-	Button(
-		UI& UIManager,
-		const SDL_Rect& rect,
-		Rectangle& target
-	)
-	: Rectangle{ rect },
-	  UIManager{ UIManager },
-	  target{target}
+	Button(const SDL_Rect& rect)
+		: Rectangle{ rect }
 	{
 		setColor({ 255, 165, 0, 255 });
 	}
 
 	// void render(SDL_Surface* surface) {}
 
-	// void handleEvent(SDL_Event& e) {}
+	void handleEvent(SDL_Event& e) {
+		Rectangle::handleEvent(e);
+
+		if (e.type == UserEvents::CLOSE_SETTINGS) {
+			isSettingsOpen = false;
+		}
+		else if (e.type == UserEvents::OPEN_SETTINGS) {
+			isSettingsOpen = true;
+		}
+	}
 
 	/*
 	void onMouseEnter() override {
@@ -36,9 +38,32 @@ public:
 	}
 	*/
 
-	void onLeftClick() override;
+	void onLeftClick() override {
+		SDL_Event e{ .type = isSettingsOpen
+			? UserEvents::CLOSE_SETTINGS
+			: UserEvents::OPEN_SETTINGS
+		};
+
+		if (e.type == UserEvents::OPEN_SETTINGS) {
+			e.user.data1 = this;
+		}
+
+		SDL_PushEvent(&e);
+	}
+
+	UserEvents::SettingsConfig getConfig() {
+		return config;
+	}
+
+	std::string getLocation() {
+		return "The Main Menu";
+	}
 
 private:
-	Rectangle& target;
-	UI& UIManager;
+	bool isSettingsOpen{ false };
+
+	UserEvents::SettingsConfig config{
+		UserEvents::SettingsPage::GAMEPLAY,
+		50, 100
+	};
 };

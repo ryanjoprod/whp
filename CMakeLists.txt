@@ -34,7 +34,6 @@ set(
 add_executable(
 	whp
 	src/main.cpp
-	src/Button.cpp
 )
 
 if(APPLE)

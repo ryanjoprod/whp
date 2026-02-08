@@ -2,10 +2,10 @@
 
 #include <SDL3/SDL.h>
 
-#include <vector>
-#include <memory>
+// #include <vector>
+// #include <memory>
 
-#include "Rectangle.h"
+#include "SettingsMenu.h"
 #include "Button.h"
 
 class UI {
@@ -24,15 +24,14 @@ public:
 	}
 	*/
 	
-	void render(SDL_Surface * surface) const {
+	void render(SDL_Surface* surface) const {
 		/*
 		for (auto& rect : rectangles) {
 			rect->render(surface);
 		}
 		*/
-		a.render(surface);
-		b.render(surface);
-		c.render(surface);
+		settingsButton.render(surface);
+		settings.render(surface);
 	}
 
 	void handleEvent(SDL_Event& e) {
@@ -41,19 +40,12 @@ public:
 			rect->handleEvent(e);
 		}
 		*/
-		a.handleEvent(e);
-		b.handleEvent(e);
-		c.handleEvent(e);
-	}
-
-	void setRectangleColors(const SDL_Color& color) {
-		a.setColor(color);
-		b.setColor(color);
+		settingsButton.handleEvent(e);
+		settings.handleEvent(e);
 	}
 
 private:
 	// std::vector<std::unique_ptr<Rectangle>> rectangles;
-	Rectangle a{ SDL_Rect{50, 50, 50, 50} };
-	Rectangle b{ SDL_Rect{150, 50, 50, 50} };
-	Button c{*this, SDL_Rect{250, 50, 50, 50}, a };
+	Button settingsButton{ {50, 50, 50, 50} };
+	SettingsMenu settings;
 };
